@@ -8,24 +8,20 @@ FactoryBot.define do
     value 10.90
     enabled false
     calculator { Spree::Calculator::FixedAmountSalePriceCalculator.new }
-    association :price, factory: :international_price
+    price
 
     factory :active_sale_price do
       enabled true
     end
   end
 
-  factory :international_price, parent: :price do
-    currency { ['AFN', 'AUD', 'KRW'].sample }
-  end
-
-  factory :multi_price_variant, parent: :variant do
+  factory :international_variant, parent: :variant do
     transient do
-      prices_count 3
+      price_currencies ['KES', 'UAH', 'AUD']
     end
 
     after(:create) do |variant, evaluator|
-      create_list(:international_price, evaluator.prices_count, variant: variant)
+      create_list(:price, evaluator.price_currencies.count, variant: variant)
     end
   end
 end

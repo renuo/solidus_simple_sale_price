@@ -13,7 +13,7 @@ describe Spree::Variant do
   end
 
   it 'changes the price of all attached prices' do
-    variant = create(:multi_price_variant)
+    variant = create(:international_variant)
     variant.put_on_sale 10.95
 
     expect(variant.prices.count).not_to eql 0
@@ -22,8 +22,8 @@ describe Spree::Variant do
     end
   end
 
-  it 'changes the price for each specific currency' do
-    variant = create(:multi_price_variant, prices_count: 5)
+  it 'changes the price for each currency' do
+    variant = create(:international_variant)
 
     variant.prices.each do |p|
       variant.put_on_sale 10.95, { currencies: [ p.currency ] }
@@ -33,24 +33,27 @@ describe Spree::Variant do
     end
   end
 
-  it 'changes the price for multiple currencies' do
-    variant = create(:multi_price_variant, prices_count: 5)
-    some_prices = variant.prices.sample(3)
+  it 'changes the price some specific currencies' do
+    variant = create(:international_variant, price_currencies: ['CHF', 'GBP', 'AUD', 'KES'])
 
-    variant.put_on_sale(10.95, {
-      currencies: some_prices.map(&:currency)
-      # TODO: does not work yet, because sale_prices take the calculator instance away from each other
-      #calculator_type: Spree::Calculator::PercentOffSalePriceCalculator.new
-    })
+    some_prices = variant.prices.where(currency: ['AUD', 'CHF'])
+    other_prices = variant.prices.where(currency: ['GBP', 'KES'])
+
+    variant.put_on_sale(10.95, { currencies: some_prices.map(&:currency)})
 
     some_prices.each do |p|
       expect(variant.price_in(p.currency).price).to be_within(0.01).of(10.95)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal.new(19.99, 4)
     end
+
+    other_prices.each do |p|
+      expect(variant.price_in(p.currency).price).to eql(BigDecimal.new(19.99, 4))
+      expect(variant.original_price_in(p.currency).price).to eql BigDecimal.new(19.99, 4)
+    end
   end
 
   it 'can set the original price to something different without changing the sale price' do
-    variant = create(:multi_price_variant, prices_count: 5)
+    variant = create(:international_variant)
     variant.put_on_sale(10.95)
     variant.prices.each do |p|
       p.original_price = 12.90
@@ -65,7 +68,7 @@ describe Spree::Variant do
   end
 
   it 'is not on sale anymore if the original price is lower than the sale price' do
-    variant = create(:multi_price_variant, prices_count: 5)
+    variant = create(:international_variant)
     variant.put_on_sale(10.95)
     variant.prices.each do |p|
       p.original_price = 9.90
@@ -80,9 +83,8 @@ describe Spree::Variant do
   end
 
   context 'with a valid sale' do
-    let(:variant) { create(:multi_price_variant, prices_count: 5) }
-
     it 'can disable and enable a sale for all currencies' do
+      variant = create(:international_variant)
       variant.put_on_sale(10.95)
 
       variant.disable_sale
@@ -96,20 +98,24 @@ describe Spree::Variant do
       end
     end
 
-    it 'can disable and enable a sale for specific currencies' do
+    it 'can disable and enable a sale for some currencies' do
+      variant = create(:international_variant, price_currencies: ['CHF', 'GBP', 'AUD', 'KES'])
       variant.put_on_sale(10.95)
 
-      price_groups = variant.prices.in_groups(2)
-      variant.disable_sale(price_groups.first.map(&:currency))
+      some_prices = variant.prices.where(currency: ['KES', 'CHF'])
+      other_prices = variant.prices.where(currency: ['GBP', 'AUD'])
 
-      price_groups.first.each do |p|
+      variant.disable_sale(['KES', 'CHF'])
+
+      some_prices.each do |p|
         expect(variant.on_sale_in?(p.currency)).to be false
       end
-      price_groups.second.each do |p|
+      other_prices.each do |p|
         expect(variant.on_sale_in?(p.currency)).to be true
       end
 
-      variant.enable_sale(price_groups.first.map(&:currency))
+      variant.enable_sale(['KES', 'CHF'])
+
       variant.prices.each do |p|
         expect(variant.on_sale_in?(p.currency)).to be true
       end

@@ -19,7 +19,7 @@ FactoryBot.define do
   end
 
   factory :international_price, parent: :price do
-    currency { Faker::Currency.code }
+    currency { ['AFN', 'AUD', 'KRW'].sample }
   end
 
   factory :multi_price_variant, parent: :variant do

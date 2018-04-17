@@ -11,8 +11,6 @@ describe Spree::Price do
 
     expect(sale_price).to have_attributes({
       value: BigDecimal.new(15.99, 4),
-      start_at: be_within(1.second).of(Time.now),
-      end_at: nil,
       enabled: true,
       calculator: an_instance_of(Spree::Calculator::FixedAmountSalePriceCalculator)
     })

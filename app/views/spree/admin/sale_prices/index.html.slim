@@ -23,12 +23,6 @@
 
       .row
         .columns.three
-          = f.label :start_at, t('sale_price_start_at')
-          = f.text_field :start_at, class: "datepicker"
-        .columns.three
-          = f.label :end_at, t('sale_price_end_at')
-          = f.text_field :end_at, class: "datepicker"
-        .columns.three
           = f.label :submit, style: 'visibility: hidden;'
           = f.submit "Add Sale Price"
 

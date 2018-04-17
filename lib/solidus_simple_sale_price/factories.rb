@@ -6,14 +6,11 @@ FactoryBot.define do
 
   factory :sale_price, class: Spree::SalePrice do
     value 10.90
-    start_at nil
-    end_at nil
     enabled false
     calculator { Spree::Calculator::FixedAmountSalePriceCalculator.new }
     association :price, factory: :international_price
 
     factory :active_sale_price do
-      start_at { Time.now }
       enabled true
     end
   end

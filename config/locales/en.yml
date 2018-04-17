@@ -9,6 +9,4 @@ en:
   sale_price_amount: 'Amount'
   sale_price_active: 'Active'
   sale_price_currency: "Currency"
-  sale_price_start_at: "Sale Start Date"
-  sale_price_end_at: "Sale End Date"
   sale_price_enabled: "Enabled"

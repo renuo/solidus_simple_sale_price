@@ -29,16 +29,6 @@ Spree::Product.class_eval do
     self.touch
   end
 
-  def start_sale(end_time = nil, all_variants = true)
-    run_on_variants(all_variants) { |v| v.start_sale(end_time) }
-    self.touch
-  end
-
-  def stop_sale(all_variants = true)
-    run_on_variants(all_variants) { |v| v.stop_sale }
-    self.touch
-  end
-
   private
     def run_on_variants(all_variants, &block)
       if all_variants && variants.present?

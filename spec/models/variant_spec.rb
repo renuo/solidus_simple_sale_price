@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Spree::Variant do
-
   it 'can put a variant on a standard sale' do
     variant = create(:variant)
     expect(variant.on_sale?).to be false
@@ -87,18 +86,6 @@ describe Spree::Variant do
       @variant.put_on_sale(10.95) # sale is started and enabled at this point for all currencies
     end
 
-    it 'can stop and start a sale for all currencies' do
-      @variant.stop_sale
-      @variant.prices.each do |p|
-        expect(@variant.on_sale_in?(p.currency)).to be false
-      end
-
-      @variant.start_sale
-      @variant.prices.each do |p|
-        expect(@variant.on_sale_in?(p.currency)).to be true
-      end
-    end
-
     it 'can disable and enable a sale for all currencies' do
       @variant.disable_sale
       @variant.prices.each do |p|
@@ -106,23 +93,6 @@ describe Spree::Variant do
       end
 
       @variant.enable_sale
-      @variant.prices.each do |p|
-        expect(@variant.on_sale_in?(p.currency)).to be true
-      end
-    end
-
-    it 'can stop and start a sale for specific currencies' do
-      price_groups = @variant.prices.in_groups(2)
-      @variant.stop_sale(price_groups.first.map(&:currency))
-
-      price_groups.first.each do |p|
-        expect(@variant.on_sale_in?(p.currency)).to be false
-      end
-      price_groups.second.each do |p|
-        expect(@variant.on_sale_in?(p.currency)).to be true
-      end
-
-      @variant.start_sale(1.second.ago, price_groups.first.map(&:currency))
       @variant.prices.each do |p|
         expect(@variant.on_sale_in?(p.currency)).to be true
       end
@@ -144,7 +114,5 @@ describe Spree::Variant do
         expect(@variant.on_sale_in?(p.currency)).to be true
       end
     end
-
   end
-
 end

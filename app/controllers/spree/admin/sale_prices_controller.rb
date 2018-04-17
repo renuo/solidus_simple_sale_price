@@ -33,8 +33,6 @@ module Spree
             :id,
             :value,
             :currency,
-            :start_at,
-            :end_at,
             :enabled
         )
       end

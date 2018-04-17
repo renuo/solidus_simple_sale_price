@@ -8,8 +8,6 @@ Spree::Price.class_eval do
   def new_sale(value, params = {})
     sale_price_params = {
         value: value,
-        start_at: params.fetch(:start_at, Time.now),
-        end_at: params.fetch(:end_at, nil),
         enabled: params.fetch(:enabled, true),
         calculator: params.fetch(:calculator_type, Spree::Calculator::FixedAmountSalePriceCalculator.new)
     }
@@ -82,14 +80,6 @@ Spree::Price.class_eval do
     active_sale.disable if active_sale.present?
   end
 
-  def start_sale(end_time = nil)
-    next_active_sale.start(end_time) if next_active_sale.present?
-  end
-
-  def stop_sale
-    active_sale.stop if active_sale.present?
-  end
-  
   private
     def first_sale(scope)
       scope.order("created_at DESC").first

@@ -9,6 +9,4 @@ de:
   sale_price_amount: 'Wert'
   sale_price_active: 'Aktiv'
   sale_price_currency: "Währung"
-  sale_price_start_at: "Startdatum"
-  sale_price_end_at: "Enddatum"
   sale_price_enabled: "Aktiviert"

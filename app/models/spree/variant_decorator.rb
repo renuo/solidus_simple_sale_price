@@ -49,14 +49,6 @@ Spree::Variant.class_eval do
     run_on_prices(currencies) { |p| p.disable_sale }
   end
 
-  def start_sale(end_time = nil, currencies = nil)
-    run_on_prices(currencies) { |p| p.start_sale end_time }
-  end
-
-  def stop_sale(currencies = nil)
-    run_on_prices(currencies) { |p| p.stop_sale }
-  end
-  
   private
     # runs on all prices or on the ones with the currencies you've specified
     def run_on_prices(currencies = nil, &block)

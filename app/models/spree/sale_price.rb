@@ -10,7 +10,7 @@ module Spree
     validates :calculator, presence: true
     accepts_nested_attributes_for :calculator
 
-    scope :active, -> { where(enabled: true).where('(start_at <= ? OR start_at IS NULL) AND (end_at >= ? OR end_at IS NULL)', Time.now, Time.now) }
+    scope :active, -> { where(enabled: true) }
 
     before_destroy :touch_product
     # TODO make this work or remove it
@@ -38,15 +38,12 @@ module Spree
       Spree::SalePrice.active.include? self
     end
 
-    def start(end_time = nil)
-      end_time = nil if end_time.present? && end_time <= Time.now # if end_time is not in the future then make it nil (no end)
-      attr = { end_at: end_time, enabled: true }
-      attr[:start_at] = Time.now if self.start_at.present? && self.start_at > Time.now # only set start_at if it's not set in the past
-      update_attributes(attr)
+    def start
+      update_attributes(enabled: true)
     end
 
     def stop
-      update_attributes({ end_at: Time.now, enabled: false })
+      update_attributes(enabled: false)
     end
 
     # Convenience method for displaying the price of a given sale_price in the table

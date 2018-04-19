@@ -1,0 +1,19 @@
+<div data-hook="admin_product_price_form_amount" class="col-8">
+  <div class="row">
+    <div class="col-6">
+      <%= f.field_container :original_amount do %>
+        <%= f.label :price %>
+        <%= render "spree/admin/shared/number_with_currency", f: f, amount_attr: :original_amount, currency_attr: :currency %>
+      <% end %>
+    </div>
+
+    <div class="col-6">
+      <%= f.field_container :sale_amount do %>
+        <%= f.label :sale %>
+        <div>
+          <%= f.text_field :sale_amount, class: 'form-control number-with-currency-amount' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

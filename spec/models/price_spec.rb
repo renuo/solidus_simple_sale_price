@@ -1,56 +1,63 @@
 require 'spec_helper'
 
 describe Spree::Price do
+  let(:instance) { build(:price) }
 
-  it 'can build a new sale by factory' do
-    price = build(:price)
-    sale_price = price.new_sale(15.99)
-
-    expect(price.on_sale?).to be false
-    expect(price.price).to eql BigDecimal.new(19.99, 4)
-
-    expect(sale_price).to have_attributes({
-      value: BigDecimal.new(15.99, 4),
-      enabled: true,
-      calculator: an_instance_of(Spree::Calculator::FixedAmountSalePriceCalculator)
-    })
-  end
-
-  it 'can put a price on a fixed sale' do
-    price = create(:price)
-    price.put_on_sale 15.95
-
-    expect(price.on_sale?).to be true
-    expect(price.price).to eql BigDecimal.new(15.95, 4)
-    expect(price.original_price).to eql(19.99)
-  end
-
-  it 'can put a price on a percent-off sale' do
-    price = create(:price)
-    price.put_on_sale 0.2, { calculator_type: Spree::Calculator::PercentOffSalePriceCalculator.new }
-
-    expect(price.on_sale?).to be true
-    expect(price.price).to be_within(0.01).of(15.99)
-    expect(price.original_price).to eql(19.99)
-  end
-
-  context 'calculating discount percentage' do
-    it 'returns 0 if there\'s no original price' do
-      price = create(:price)
-      price.amount = BigDecimal(0)
-      expect(price.discount_percent.to_f).to eql 0.0
+  describe '#original_amount' do
+    it 'keeps track of the old price' do
+      expect { instance.amount = 1.00 }.to change { instance.original_amount }.to(1.00)
     end
 
-    it 'returns 0 if it\'s not on sale' do
-      price = create(:price)
-      expect(price.discount_percent.to_f).to eql 0.0
-    end
-
-    it 'returns correct percentage value' do
-      price = create(:price)
-      price.put_on_sale(15.00)
-      expect(price.discount_percent.to_f).to be_within(0.1).of(25)
+    it 'sets the amount attribute' do
+      expect { instance.original_amount = 2.00 }.to change { instance.amount }.to(2.00)
     end
   end
 
+  context 'when there is a sale price amount' do
+    let(:instance) { build(:price, amount: 18.48, sale_amount: 17.89) }
+
+    describe '#original_amount' do
+      subject { instance.original_amount }
+      it { is_expected.not_to eq(instance.sale_amount) }
+    end
+
+    describe '#amount' do
+      subject { instance.amount }
+      it { is_expected.to eq(instance.sale_amount) }
+    end
+
+    describe '#on_sale?' do
+      subject { instance.on_sale? }
+      it { is_expected.to be_truthy }
+    end
+
+    describe '#discount_percent' do
+      subject { instance.discount_percent }
+      it { is_expected.to be_within(0.05).of(3.2) }
+    end
+  end
+
+  context 'when there is NO sale price amount' do
+    let(:instance) { build(:price, amount: 18.48, sale_amount: nil) }
+
+    describe '#original_amount' do
+      subject { instance.amount }
+      it { is_expected.not_to eq(instance.sale_amount) }
+    end
+
+    describe '#amount' do
+      subject { instance.amount }
+      it { is_expected.to eq(instance.original_amount) }
+    end
+
+    describe '#on_sale?' do
+      subject { instance.on_sale? }
+      it { is_expected.to be_falsey }
+    end
+
+    describe '#discount_percent' do
+      subject { instance.discount_percent }
+      it { is_expected.to eq(0.0) }
+    end
+  end
 end

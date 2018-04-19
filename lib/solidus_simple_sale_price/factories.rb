@@ -4,24 +4,19 @@ FactoryBot.define do
   # Example adding this to your spec_helper will load these Factories for use:
   # require 'solidus_simple_sale_price/factories'
 
-  factory :sale_price, class: Spree::SalePrice do
-    value 10.90
-    enabled false
-    calculator { Spree::Calculator::FixedAmountSalePriceCalculator.new }
-    price
-
-    factory :active_sale_price do
-      enabled true
-    end
+  factory :price_on_sale, parent: :price do
+    sale_amount 10.90
   end
 
   factory :international_variant, parent: :variant do
     transient do
-      price_currencies ['KES', 'UAH', 'AUD']
+      price_currencies %w[KES UAH AUD]
     end
 
     after(:create) do |variant, evaluator|
-      create_list(:price, evaluator.price_currencies.count, variant: variant)
+      evaluator.price_currencies.each do |currency|
+        create(:price, variant: variant, currency: currency)
+      end
     end
   end
 end

@@ -1,87 +1,27 @@
 Spree::Price.class_eval do
-  has_many :sale_prices
-  
-  def put_on_sale(value, params = {})
-    new_sale(value, params).save
+  def original_amount
+    self[:amount]
   end
 
-  def new_sale(value, params = {})
-    sale_price_params = {
-        value: value,
-        enabled: params.fetch(:enabled, true),
-        calculator: params.fetch(:calculator_type, Spree::Calculator::FixedAmountSalePriceCalculator.new)
-    }
-    return sale_prices.new(sale_price_params)
-  end
-  
-  # TODO make update_sale method
-
-  def active_sale
-    first_sale(sale_prices.active) if on_sale?
-  end
-  alias :current_sale :active_sale
-
-  def next_active_sale
-    first_sale(sale_prices) if sale_prices.present?
-  end
-  alias :next_current_sale :next_active_sale
-
-  def sale_price
-    active_sale.calculated_price if on_sale?
-  end
-  
-  def sale_price=(value)
-    if on_sale?
-      active_sale.update_attribute(:value, value)
-    else
-      put_on_sale(value)
-    end
-  end
-
-  def discount_percent
-    return 0.0 unless original_price > 0
-    return 0.0 unless on_sale?
-    (1 - (sale_price / original_price)) * 100
+  def original_amount=(value)
+    self[:amount] = Spree::LocalizedNumber.parse(value)
   end
 
   def on_sale?
-    sale_prices.active.present? && first_sale(sale_prices.active).value < original_price
+    sale_amount.present? && sale_amount < original_amount
   end
 
-  def original_price
-    self[:amount]
-  end
-  
-  def original_price=(value)
-    self[:amount] = Spree::LocalizedNumber.parse(value)
-  end
-  
-  def price
-    on_sale? ? sale_price : original_price
-  end
-
-  def price=(price)
-    if on_sale?
-      sale_price = price
-    else
-      self[:amount] = Spree::LocalizedNumber.parse(price)
-    end
-  end
-  
   def amount
-    price
+    on_sale? ? sale_amount : original_amount
   end
 
-  def enable_sale
-    next_active_sale.enable if next_active_sale.present?
+  def price
+    amount
   end
 
-  def disable_sale
-    active_sale.disable if active_sale.present?
+  def discount_percent
+    return 0.0 unless original_amount > 0
+    return 0.0 unless on_sale?
+    (1 - (sale_amount / original_amount)) * 100.0
   end
-
-  private
-    def first_sale(scope)
-      scope.order("created_at DESC").first
-    end
 end

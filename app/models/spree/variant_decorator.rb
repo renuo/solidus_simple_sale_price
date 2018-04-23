@@ -22,6 +22,6 @@ Spree::Variant.class_eval do
   end
 
   def discount_percent_in(currency)
-    price_for(currency).discount_percent
+    price_in(currency).discount_percent
   end
 end

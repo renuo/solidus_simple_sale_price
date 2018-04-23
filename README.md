@@ -1,7 +1,6 @@
-SolidusSimpleSalePrice
-======================
+# Simple Sale Price
 
-Introduction goes here.
+This gem allows you to have one sale price per `Spree::Price`. 
 
 Installation
 ------------

@@ -24,6 +24,7 @@ describe Spree::Variant do
       p.save!
 
       expect(variant.price_in(p.currency).price).to eq BigDecimal(10.95, 4)
+      expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
   end
@@ -39,11 +40,13 @@ describe Spree::Variant do
       p.save!
 
       expect(variant.price_in(p.currency).price).to be_within(0.01).of(10.95)
+      expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
 
     other_prices.each do |p|
       expect(variant.price_in(p.currency).price).to eql(BigDecimal(19.99, 4))
+      expect(variant.sale_price_in(p.currency).price).to be_nil
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
   end
@@ -61,5 +64,17 @@ describe Spree::Variant do
       expect(p.sale_amount).to eq BigDecimal(10.95, 4)
       expect(p.original_amount).to eq BigDecimal(12.90, 4)
     end
+  end
+
+  it 'calculates discount difference' do
+    variant = create(:international_variant, price_currencies: %w[CHF GBP])
+    variant.prices.each do |p|
+      p.sale_amount = 10.00
+      p.original_amount = 20.00
+      p.save!
+    end
+
+    expect(variant.discount_percent_in('CHF')).to eql(50)
+    expect(variant.discount_percent_in('GBP')).to eql(50)
   end
 end

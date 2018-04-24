@@ -7,7 +7,7 @@ Spree::BaseHelper.class_eval do
     discount = product_or_variant.discount_percent_in current_currency
 
     if discount.positive?
-      "#{number_to_percentage(discount, precision: 0).to_html} #{append_text}"
+      "#{number_to_percentage(discount, precision: 0)} #{append_text}"
     else
       ''
     end

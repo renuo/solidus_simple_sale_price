@@ -1,8 +1,8 @@
 Spree::Variant.class_eval do
   delegate :on_sale?, :discount_percent, to: :default_price
 
-  def on_sale_for?(currency)
-    price_for(currency).on_sale?
+  def on_sale_in?(currency)
+    price_in(currency).on_sale?
   end
 
   def sale_price
@@ -14,7 +14,7 @@ Spree::Variant.class_eval do
   end
 
   def sale_price_in(currency)
-    Spree::Price.new variant_id: id, currency: currency, amount: price_for(currency).sale_price
+    Spree::Price.new variant_id: id, currency: currency, amount: price_in(currency).sale_amount
   end
 
   def original_price_in(currency)

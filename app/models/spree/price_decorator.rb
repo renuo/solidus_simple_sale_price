@@ -20,7 +20,7 @@ Spree::Price.class_eval do
   end
 
   def discount_percent
-    return 0.0 unless original_amount > 0
+    return 0.0 unless original_amount.positive?
     return 0.0 unless on_sale?
     (1 - (sale_amount / original_amount)) * 100.0
   end

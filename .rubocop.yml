@@ -5,15 +5,20 @@ AllCops:
   TargetRailsVersion: 5.1
   TargetRubyVersion: 2.5
   Exclude:
-    - 'spec/dummy/**/*'
-    - 'vendor/bundle/**/*'
-    - 'bin/**/*'
-    - 'log/**/*'
-    - 'tmp/**/*'
-    - 'db/**/*'
+  - 'Rakefile'
+  - 'spec/dummy/**/*'
+  - 'vendor/bundle/**/*'
+  - 'bin/**/*'
+  - 'log/**/*'
+  - 'tmp/**/*'
+  - 'db/**/*'
+  - 'lib/generators/solidus_simple_sale_price/install/install_generator.rb'
 
 Metrics/LineLength:
   Max: 120
+Metrics/BlockLength:
+  Exclude:
+  - 'spec/**/*_spec.rb'
 
 Style/Documentation:
   Enabled: false

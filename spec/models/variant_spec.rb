@@ -12,6 +12,7 @@ describe Spree::Variant do
 
     expect(variant.on_sale?).to be true
     expect(variant.original_price).to eql 1337.42
+    expect(variant.sale_price).to eql 20.18
     expect(variant.price).to eql 20.18
   end
 
@@ -23,6 +24,7 @@ describe Spree::Variant do
       p.sale_amount = 10.95
       p.save!
 
+      expect(variant.on_sale_in?(p.currency)).to be true
       expect(variant.price_in(p.currency).price).to eq BigDecimal(10.95, 4)
       expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)

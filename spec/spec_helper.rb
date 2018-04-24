@@ -9,6 +9,7 @@ SimpleCov.start do
   add_group 'Views', 'app/views'
   add_group 'Libraries', 'lib'
 end
+SimpleCov.minimum_coverage 100
 
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'

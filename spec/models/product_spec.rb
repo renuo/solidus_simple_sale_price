@@ -20,4 +20,12 @@ describe Spree::Product do
     expect(product.original_price).to eql 19.89
     expect(product.on_sale?).to be false
   end
+
+  context 'when the price is not set yet' do
+    it 'returns nil for the sale and original price' do
+      product = described_class.new
+      expect(product.master.sale_price_in('EUR')).to eq nil
+      expect(product.master.original_price_in('EUR')).to eq nil
+    end
+  end
 end

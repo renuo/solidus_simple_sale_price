@@ -14,11 +14,13 @@ Spree::Variant.class_eval do
   end
 
   def sale_price_in(currency)
-    Spree::Price.new variant_id: id, currency: currency, amount: price_in(currency).sale_amount
+    price = price_in(currency)
+    Spree::Price.new variant_id: id, currency: currency, amount: price.sale_amount if price
   end
 
   def original_price_in(currency)
-    Spree::Price.new variant_id: id, currency: currency, amount: price_in(currency).original_amount
+    price = price_in(currency)
+    Spree::Price.new variant_id: id, currency: currency, amount: price.original_amount if price
   end
 
   def discount_percent_in(currency)

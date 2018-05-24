@@ -25,7 +25,7 @@ describe Spree::Variant do
       p.save!
 
       expect(variant.on_sale_in?(p.currency)).to be true
-      expect(variant.price_in(p.currency).price).to eq BigDecimal(10.95, 4)
+      expect(variant.price_in_currency(p.currency).price).to eq BigDecimal(10.95, 4)
       expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
@@ -41,13 +41,13 @@ describe Spree::Variant do
       p.sale_amount = 10.95
       p.save!
 
-      expect(variant.price_in(p.currency).price).to be_within(0.01).of(10.95)
+      expect(variant.price_in_currency(p.currency).price).to be_within(0.01).of(10.95)
       expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
 
     other_prices.each do |p|
-      expect(variant.price_in(p.currency).price).to eql(BigDecimal(19.99, 4))
+      expect(variant.price_in_currency(p.currency).price).to eql(BigDecimal(19.99, 4))
       expect(variant.sale_price_in(p.currency).price).to be_nil
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)
     end
@@ -78,5 +78,41 @@ describe Spree::Variant do
 
     expect(variant.discount_percent_in('CHF')).to eql(50)
     expect(variant.discount_percent_in('GBP')).to eql(50)
+  end
+
+  describe '.price_in_currency' do
+    let(:variant) { create(:variant) }
+
+    before do
+      variant.prices << create(:price, variant: variant, currency: 'EUR', amount: 33.33)
+    end
+
+    subject do
+      variant.price_in_currency(currency)
+    end
+
+    context 'when currency is not specified' do
+      let(:currency) { nil }
+
+      it 'returns nil' do
+        expect(subject).to be_nil
+      end
+    end
+
+    context 'when currency is EUR' do
+      let(:currency) { 'EUR' }
+
+      it 'returns the value in the EUR' do
+        expect(subject.display_price.to_s).to eql '€33.33'
+      end
+    end
+
+    context 'when currency is USD' do
+      let(:currency) { 'USD' }
+
+      it 'returns the value in the USD' do
+        expect(subject.display_price.to_s).to eql '$19.99'
+      end
+    end
   end
 end

@@ -28,6 +28,6 @@ Spree::Variant.class_eval do
   end
 
   def price_in_currency(currency)
-    prices.currently_valid.find_by(currency: currency)
+    currently_valid_prices.detect { |price| price.currency == currency }
   end
 end

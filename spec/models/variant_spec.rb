@@ -23,7 +23,7 @@ describe Spree::Variant do
       p.amount = 19.99
       p.sale_amount = 10.95
       p.save!
-
+      variant.reload
       expect(variant.on_sale_in?(p.currency)).to be true
       expect(variant.price_in_currency(p.currency).price).to eq BigDecimal(10.95, 4)
       expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
@@ -40,7 +40,7 @@ describe Spree::Variant do
     some_prices.each do |p|
       p.sale_amount = 10.95
       p.save!
-
+      variant.reload
       expect(variant.price_in_currency(p.currency).price).to be_within(0.01).of(10.95)
       expect(variant.sale_price_in(p.currency).price).to eql BigDecimal(10.95, 4)
       expect(variant.original_price_in(p.currency).price).to eql BigDecimal(19.99, 4)

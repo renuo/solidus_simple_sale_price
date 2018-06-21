@@ -2,6 +2,8 @@
 
 This gem allows you to have one sale price per `Spree::Price`. 
 
+[![Build Status](https://semaphoreci.com/api/v1/renuo/solidus_simple_sale_price/branches/master/badge.svg)](https://semaphoreci.com/renuo/solidus_simple_sale_price)
+
 Installation
 ------------
 

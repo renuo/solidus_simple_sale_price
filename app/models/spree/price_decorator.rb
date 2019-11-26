@@ -8,7 +8,7 @@ Spree::Price.class_eval do
   end
 
   def on_sale?
-    sale_amount.present? && sale_amount < original_amount
+    sale_amount.present? && original_amount.present? && sale_amount < original_amount
   end
 
   def amount

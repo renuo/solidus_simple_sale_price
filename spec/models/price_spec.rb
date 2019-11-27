@@ -36,7 +36,7 @@ describe Spree::Price do
       it { is_expected.to be_within(0.05).of(3.2) }
     end
 
-    context 'when there is not amount' do
+    context 'when there is no amount' do
       let(:instance) { build(:price, amount: nil, sale_amount: 12.0) }
 
       describe '#on_sale?' do

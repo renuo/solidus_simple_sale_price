@@ -35,6 +35,16 @@ describe Spree::Price do
       subject { instance.discount_percent }
       it { is_expected.to be_within(0.05).of(3.2) }
     end
+
+    context 'when there is no amount' do
+      let(:instance) { build(:price, amount: nil, sale_amount: 12.0) }
+
+      describe '#on_sale?' do
+        subject { instance.on_sale? }
+
+        it { is_expected.to be false }
+      end
+    end
   end
 
   context 'when there is NO sale price amount' do

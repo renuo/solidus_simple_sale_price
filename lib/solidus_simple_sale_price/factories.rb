@@ -6,12 +6,12 @@ FactoryBot.define do
   # require 'solidus_simple_sale_price/factories'
 
   factory :price_on_sale, parent: :price do
-    sale_amount 10.90
+    sale_amount { 10.90 }
   end
 
   factory :international_variant, parent: :variant do
     transient do
-      price_currencies %w[KES UAH AUD]
+      price_currencies { %w[KES UAH AUD] }
     end
 
     after(:create) do |variant, evaluator|

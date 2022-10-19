@@ -2,7 +2,7 @@ Spree::Variant.class_eval do
   delegate :on_sale?, :discount_percent, to: :default_price
 
   def on_sale_in?(currency)
-    price_in_currency(currency).on_sale?
+    !!price_in_currency(currency)&.on_sale?
   end
 
   def sale_price

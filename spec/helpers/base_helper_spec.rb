@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Spree::BaseHelper, type: :helper do
-  before(:each) do
+  before do
     mock_current_store
   end
 
@@ -16,17 +16,19 @@ RSpec.describe Spree::BaseHelper, type: :helper do
   describe '#display_discount_percent' do
     subject { helper.display_discount_percent(variant) }
 
-    before(:each) do
+    before do
       expect(variant).to receive(:discount_percent_in).and_return(discount)
     end
 
     context 'when variant has a discount' do
       let(:discount) { 10 }
+
       it { is_expected.to eql('10% Off') }
     end
 
     context 'when variant has NO discount' do
       let(:discount) { 0 }
+
       it { is_expected.to eql('') }
     end
   end

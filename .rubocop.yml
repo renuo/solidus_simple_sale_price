@@ -1,6 +1,8 @@
+require:
+  - solidus_dev_support/rubocop
+
 Rails:
   Enabled: true
-
 AllCops:
   TargetRailsVersion: 5.1
   TargetRubyVersion: 2.5

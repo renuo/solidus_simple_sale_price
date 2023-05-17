@@ -58,9 +58,6 @@ describe Spree::Variant do
     variant.prices.each do |p|
       p.sale_amount = 10.95
       p.original_amount = 12.90
-    end
-
-    variant.prices.each do |p|
       expect(p.on_sale?).to be true
       expect(p.price).to eq BigDecimal('10.95', 4)
       expect(p.sale_amount).to eq BigDecimal('10.95', 4)

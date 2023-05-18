@@ -8,12 +8,12 @@ describe Spree::Variant do
     variant = create(:variant)
     expect(variant.on_sale?).to be false
 
-    variant.default_price = price_on_sale
+    variant.prices << price_on_sale
 
     expect(variant.on_sale?).to be true
-    expect(variant.original_price).to be 1337.42
-    expect(variant.sale_price).to be 20.18
-    expect(variant.price).to be 20.18
+    expect(variant.original_price).to eq 1337.42
+    expect(variant.sale_price).to eq 20.18
+    expect(variant.price).to eq 20.18
   end
 
   it 'can query the sale price for each currency' do
@@ -67,14 +67,15 @@ describe Spree::Variant do
 
   it 'calculates discount difference' do
     variant = create(:international_variant, price_currencies: %w[CHF GBP])
+    variant.reload
     variant.prices.each do |p|
       p.sale_amount = 10.00
       p.original_amount = 20.00
       p.save!
     end
 
-    expect(variant.discount_percent_in('CHF')).to be(50)
-    expect(variant.discount_percent_in('GBP')).to be(50)
+    expect(variant.discount_percent_in('CHF')).to eq(50)
+    expect(variant.discount_percent_in('GBP')).to eq(50)
   end
 
   describe '.price_in_currency' do

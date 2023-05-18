@@ -33,7 +33,7 @@ module Spree
     end
 
     def price_in_currency(currency)
-      currently_valid_prices.detect { |price| price.currency == currency }
+      prices.currently_valid.detect { |price| price.currency == currency }
     end
 
     ::Spree::Variant.prepend self

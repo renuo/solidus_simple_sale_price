@@ -1,32 +1,34 @@
+require_relative 'lib/solidus_simple_sale_price/version'
 
-$LOAD_PATH.push File.expand_path('lib', __dir__)
-require 'solidus_simple_sale_price/version'
+Gem::Specification.new do |spec|
+  spec.name = 'solidus_simple_sale_price'
+  spec.version = SolidusSimpleSalePrice::VERSION
+  spec.authors = ['Josua Schmid']
+  spec.email = 'josua.schmid@renuo.ch'
 
-Gem::Specification.new do |s|
-  s.name        = 'solidus_simple_sale_price'
-  s.version     = SolidusSimpleSalePrice::VERSION
-  s.summary     = 'Adds sale price functionality to Solidus'
-  s.description = 'With this plugin its possible to have static sales per product'
-  s.license     = 'BSD-3-Clause'
+  spec.summary = 'Adds sale price functionality to Solidus'
+  spec.description = 'With this plugin its possible to have static sales per product'
+  spec.homepage = 'http://github.com/renuo/solidus_simple_sale_price'
+  spec.license = 'BSD-3-Clause'
 
-  s.author    = 'Josua Schmid'
-  s.email     = 'josua.schmid@renuo.ch'
-  s.homepage  = 'http://github.com/renuo/solidus_simple_sale_price'
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = 'https://github.com/renuo/solidus_simple_sale_price'
+  spec.metadata['changelog_uri'] = 'https://github.com/renuo/solidus_simple_sale_price/blob/master/CHANGELOG.md'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'LICENSE', 'Rakefile', 'README.md']
-  s.test_files = Dir['test/**/*']
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.5', '< 4')
 
-  s.add_dependency 'solidus_core', ['>= 1.3', '< 4']
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  files = Dir.chdir(__dir__) { `git ls-files -z`.split("\x0") }
 
-  s.add_development_dependency 'capybara'
-  s.add_development_dependency 'coffee-rails'
-  s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'factory_bot'
-  s.add_development_dependency 'poltergeist'
-  s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rubocop', '0.54.0'
-  s.add_development_dependency 'rubocop-rspec', '1.4.0'
-  s.add_development_dependency 'sass-rails'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'sqlite3'
+  spec.files = files.grep_v(%r{^(test|spec|features)/})
+  spec.test_files = files.grep(%r{^(test|spec|features)/})
+  spec.bindir = "exe"
+  spec.executables = files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+
+  spec.add_dependency 'solidus_core', ['>= 2.0.0', '< 4']
+  spec.add_dependency 'solidus_support', '~> 0.5'
+
+  spec.add_development_dependency 'solidus_dev_support', '~> 2.6'
 end

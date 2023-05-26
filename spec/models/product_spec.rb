@@ -3,21 +3,19 @@ require 'spec_helper'
 describe Spree::Product do
   it 'can query its sale prices' do
     product = build(:product, price: 1337.42)
-    expect(product.original_price).to eql 1337.42
+    expect(product.original_price).to eq 1337.42
     expect(product.on_sale?).to be false
 
-    price_on_sale = build(:price, amount: 1337.42, sale_amount: 20.18)
-    product.master.default_price = price_on_sale
+    product.master.default_price.update!(amount: 1337.42, sale_amount: 20.18)
 
-    expect(product.price).to eql 20.18
-    expect(product.original_price).to eql 1337.42
+    expect(product.price).to eq 20.18
+    expect(product.original_price).to eq 1337.42
     expect(product.on_sale?).to be true
 
-    normal_price = build(:price, amount: 19.89)
-    product.master.default_price = normal_price
+    product.master.default_price.update!(amount: 19.89)
 
-    expect(product.price).to eql 19.89
-    expect(product.original_price).to eql 19.89
+    expect(product.price).to eq 19.89
+    expect(product.original_price).to eq 19.89
     expect(product.on_sale?).to be false
   end
 

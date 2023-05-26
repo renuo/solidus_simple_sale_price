@@ -1,0 +1,19 @@
+module Spree
+  module BaseHelperDecorator
+    def display_original_price(product_or_variant)
+      product_or_variant.original_price_in(current_pricing_options.currency).display_price.to_html
+    end
+
+    def display_discount_percent(product_or_variant, append_text = 'Off')
+      discount = product_or_variant.discount_percent_in current_pricing_options.currency
+
+      if discount.positive?
+        "#{number_to_percentage(discount, precision: 0)} #{append_text}"
+      else
+        ''
+      end
+    end
+
+    ::Spree::BaseHelper.prepend self
+  end
+end

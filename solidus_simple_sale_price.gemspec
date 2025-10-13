@@ -28,6 +28,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'solidus_core', '>= 3.0.0'
-  spec.add_dependency 'solidus_support', '~> 0.14'
-  spec.add_development_dependency 'solidus_dev_support', '~> 2.11'
+  spec.add_dependency 'solidus_support'
+  spec.add_development_dependency 'solidus_dev_support'
 end

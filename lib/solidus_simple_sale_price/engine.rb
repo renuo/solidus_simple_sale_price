@@ -13,5 +13,9 @@ module SolidusSimpleSalePrice
     config.generators do |g|
       g.test_framework :rspec
     end
+
+    initializer 'solidus_simple_sale_price.deface_overrides', after: :load_config_initializers do
+      root.join('config/overrides').glob('**/*.rb').each { |path| require path }
+    end
   end
 end

@@ -27,10 +27,6 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.color = true
 
-  if Spree.solidus_gem_version < Gem::Version.new('2.11')
-    config.extend Spree::TestingSupport::AuthorizationHelpers::Request, type: :system
-  end
-
   config.fail_fast = ENV['FAIL_FAST'] || false
   config.order = 'random'
 end

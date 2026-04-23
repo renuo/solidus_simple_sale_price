@@ -1,17 +1,10 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-branch = ENV.fetch('SOLIDUS_BRANCH', 'v3.2')
+branch = ENV.fetch('SOLIDUS_BRANCH', 'v4.5')
 gem 'solidus', github: 'solidusio/solidus', branch: branch
+gem 'solidus_frontend'
 
-# The solidus_frontend gem has been pulled out since v3.2
-gem 'solidus_frontend', github: 'solidusio/solidus_frontend' if branch == 'master'
-gem 'solidus_frontend' if branch >= 'v3.2' # rubocop:disable Bundler/DuplicatedGem
-
-# Needed to help Bundler figure out how to resolve dependencies,
-# otherwise it takes forever to resolve them.
-# See https://github.com/bundler/bundler/issues/6677
-gem 'rails', '>0.a'
+gem 'rails'
 
 # Provides basic authentication functionality for testing parts of your engine
 gem 'solidus_auth_devise'
@@ -24,11 +17,6 @@ when 'postgresql'
 else
   gem 'sqlite3'
 end
-
-# While we still support Ruby < 3 we need to workaround a limitation in
-# the 'async' gem that relies on the latest ruby, since RubyGems doesn't
-# resolve gems based on the required ruby version.
-gem 'async', '< 3' if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3')
 
 gemspec
 

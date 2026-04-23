@@ -59,4 +59,4 @@ Use Ctrl-C to stop
 
 ## License
 
-Copyright (c) 2023 Josua Schmid, released under the New BSD License.
+Copyright (c) 2023-present Josua Schmid, released under the New BSD License.

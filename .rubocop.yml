@@ -3,9 +3,9 @@ require:
 
 Rails:
   Enabled: true
+
 AllCops:
-  TargetRailsVersion: 5.1
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.1
   Exclude:
   - 'Rakefile'
   - 'spec/dummy/**/*'
@@ -16,8 +16,9 @@ AllCops:
   - 'db/**/*'
   - 'lib/generators/solidus_simple_sale_price/install/install_generator.rb'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
+
 Metrics/BlockLength:
   Exclude:
   - 'spec/**/*_spec.rb'
@@ -31,4 +32,3 @@ Naming/FileName:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
-
